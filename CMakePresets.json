@@ -21,8 +21,7 @@
         "strategy": "external"
       },
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_LIBRARY_OUTPUT_DIRECTORY": "${sourceDir}/out/Debug"
+        "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
@@ -30,8 +29,7 @@
       "displayName": "Release",
       "inherits": "x64-debug",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release",
-        "CMAKE_LIBRARY_OUTPUT_DIRECTORY": "${sourceDir}/out/Release"
+        "CMAKE_BUILD_TYPE": "Release"
       }
     }
   ]
