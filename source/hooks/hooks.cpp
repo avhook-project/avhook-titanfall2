@@ -10,6 +10,10 @@
 #include <imgui/imgui_impl_dx11.h>
 #include <imgui/imgui_freetype.h>
 #include <imgui/imgui_impl_win32.h>
+#include <titanfall2_sdk/EntityList.h>
+#include <titanfall2_sdk/ViewProjectionMatrix.h>
+#include <optional>
+#include <format>
 
 
 void* originalSwapChainPresentFunction = nullptr;
@@ -28,6 +32,22 @@ void InitImGui()
     io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
     ImGui_ImplWin32_Init(window);
     ImGui_ImplDX11_Init(pDevice, pContext);
+}
+
+std::optional<ImVec2> WorldToScreen(const uml::Vector3& worldPos)
+{
+    auto projected = (titanfall2_sdk::GetViewProjectionMatrix() * worldPos).transpose();
+
+    if (projected.at(0,3) <= 0.f)
+        return std::nullopt;
+
+    projected /= projected.at(0, 3);
+
+    const auto [width, height] = ImGui::GetMainViewport()->Size;
+
+    const auto out = projected * uml::matrix::to_screen_matrix(width, height);
+
+    return ImVec2(out.at(0,0), out.at(0, 1));
 }
 
 HRESULT __fastcall hPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
@@ -63,12 +83,24 @@ HRESULT __fastcall hPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
-    ImGui::Begin("ImGui Window");
-    ImGui::End();
+    for (size_t i = 0; i < 13; i++)
+    {
+        const auto ent = titanfall2_sdk::EntityList::Get().GetEntityById(i);
 
+        if (!ent)
+            continue;
+
+        const auto pos = WorldToScreen(ent->GetOrigin());
+
+        if (pos)
+        {
+            ImGui::GetForegroundDrawList()->AddLine({1920.f / 2, 1080}, *pos, ImColor(255, 0, 0));
+
+        }
+    }
     ImGui::Render();
 
-    pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
+    pContext->OMSetRenderTargets(1, &mainRenderTargetView, nullptr);
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 
