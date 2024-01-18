@@ -5,6 +5,8 @@
 #include <thread>
 
 #include "hooks/hooks.h"
+#include <titanfall2_sdk/EntityList.h>
+
 
 namespace avh
 {
