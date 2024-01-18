@@ -1,3 +1,6 @@
 [submodule "extlibs/minhook"]
 	path = extlibs/minhook
 	url = https://github.com/TsudaKageyu/minhook.git
+[submodule "extlibs/titanfall2-sdk"]
+	path = extlibs/titanfall2-sdk
+	url = https://github.com/avhook-project/titanfall2-sdk.git

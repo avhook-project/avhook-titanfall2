@@ -11,6 +11,7 @@ namespace avh::hooks
         HooksManager(const HooksManager&) = delete;
         ~HooksManager();
         static HooksManager& Innit();
+
     private:
         HooksManager();
     };
