@@ -1,0 +1,1 @@
+target_sources(avhook-titanfall2 PRIVATE hooks.cpp)

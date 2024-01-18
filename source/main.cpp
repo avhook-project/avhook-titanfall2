@@ -4,22 +4,29 @@
 #include <Windows.h>
 #include <thread>
 
-void HackThread(HMODULE hModule)
-{
-    while (!GetAsyncKeyState(VK_END))
-    {
-        Sleep(10);
-    }
+#include "hooks/hooks.h"
 
-    FreeLibrary(hModule);
+namespace avh
+{
+    void MainThread(HMODULE hModule)
+    {
+        hooks::HooksManager::Innit();
+
+        while (!GetAsyncKeyState(VK_END))
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+        FreeLibrary(hModule);
+    }
 }
 
-BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
+[[maybe_unused]]
+BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, [[maybe_unused]] LPVOID lpReserved)
 {
     if (ul_reason_for_call == DLL_PROCESS_ATTACH)
     {
         DisableThreadLibraryCalls(hModule);
-        std::thread(HackThread, hModule).detach();
+        std::thread(avh::MainThread, hModule).detach();
     }
-    return TRUE;
+
+    return true;
 }
