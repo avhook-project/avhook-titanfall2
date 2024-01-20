@@ -44,13 +44,6 @@ HRESULT __fastcall hPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 namespace avh::hooks
 {
-    HooksManager &avh::hooks::HooksManager::Innit()
-    {
-        static auto obj = HooksManager();
-
-        return obj;
-    }
-
     HooksManager::HooksManager()
     {
         MH_Initialize();

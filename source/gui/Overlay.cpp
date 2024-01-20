@@ -12,7 +12,7 @@
 #include <imgui/imgui_impl_dx11.h>
 #include <imgui/imgui_freetype.h>
 
-
+#include "windows/BaseWindow.h"
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -105,6 +105,9 @@ namespace avh::gui
         cfg.FontBuilderFlags |= ImGuiFreeTypeBuilderFlags_Monochrome | ImGuiFreeTypeBuilderFlags_MonoHinting;
         static ImWchar ranges[] = { 0x1, 0xFFFD, 0 };
         io.Fonts->AddFontFromFileTTF(R"(C:\Windows\Fonts\verdanab.ttf)", 13.f, &cfg, ranges);
+
+        window =  std::make_unique<window::BaseWindow>("AVhook");
+        SetImGuiTheme();
     }
 
     void Overlay::Render()
@@ -125,13 +128,49 @@ namespace avh::gui
 
     void Overlay::RenderMenu()
     {
-        ImGui::Begin("ImGui Window");
-        ImGui::End();
+        window->Render();
+
     }
 
     void Overlay::RenderEsp()
     {
 
+    }
+
+    void Overlay::SetImGuiTheme()
+    {
+        auto& style = ImGui::GetStyle();
+        auto& theme = style.Colors;
+
+        style.FrameBorderSize = 1;
+        style.AntiAliasedLinesUseTex = false;
+        style.AntiAliasedLines = false;
+        style.AntiAliasedFill = true;
+        style.ScrollbarRounding = 0.f;
+        style.WindowMinSize = ImVec2(10, 10);
+        style.WindowPadding= {0, 0};
+
+        theme[ImGuiCol_Text] = ImColor(255, 255, 255);
+        theme[ImGuiCol_TextDisabled] = ImColor(199, 199, 199);
+        theme[ImGuiCol_WindowBg] = ImColor(19, 19, 19);
+        theme[ImGuiCol_ChildBg] = ImColor();
+        theme[ImGuiCol_PopupBg] = ImColor(19, 19, 19);
+        theme[ImGuiCol_Border] = ImColor(255, 95, 95);
+        theme[ImGuiCol_BorderShadow] = ImColor();
+        theme[ImGuiCol_FrameBg] = ImColor();
+        theme[ImGuiCol_FrameBgHovered] = ImColor(255, 102, 102, 90);
+        theme[ImGuiCol_FrameBgActive] = ImColor(255, 255, 255, 90);
+        theme[ImGuiCol_Header] = ImColor(255, 95, 95);
+        theme[ImGuiCol_HeaderActive] = ImColor(255, 255, 255, 90);
+        theme[ImGuiCol_HeaderHovered] = ImColor(255, 102, 102, 90);
+        theme[ImGuiCol_CheckMark] = ImColor(255, 95, 95);
+        theme[ImGuiCol_Button] = ImColor();
+        theme[ImGuiCol_ButtonHovered] = ImColor(255, 102, 102, 90);
+        theme[ImGuiCol_ButtonActive] = ImColor(255, 255, 255, 90);
+        theme[ImGuiCol_TextSelectedBg] = ImColor(255, 95, 95);
+        theme[ImGuiCol_SliderGrab] = ImColor(255, 95, 95);
+        theme[ImGuiCol_SliderGrabActive] = ImColor(255, 255, 255, 90);
+        theme[ImGuiCol_ScrollbarGrabActive] = ImColor(255, 255, 255, 90);
     }
 
 } // avh
